@@ -1,0 +1,28 @@
+name: Build and push to Dockerhub # name of workflow shown in github UI
+
+on:  # Defines when the workflow triggers
+  push:  # Triggher on push events
+    branches:  #for specific branch
+      - main  #only when pushing to main branch
+
+jobs: # workflow can have one or more job
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to Dockerhub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          username: ${{ secrets.SERVER_USER }} # username 
+          key: ${{ secrets.SERVER_SSH_KEY }} # private key qe gjenerohet gjat krijimit te serverit
+          port: 22
+          script: | 
+            docker pull rinorh/cicd:latest
+            docker stop cicd || true
+            docker rm cicd || true
+            docker run -d -p 8080 cicd:latest
