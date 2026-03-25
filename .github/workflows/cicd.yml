@@ -18,11 +18,3 @@ jobs: # workflow can have one or more job
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          username: ${{ secrets.SERVER_USER }} # username 
-          key: ${{ secrets.SERVER_SSH_KEY }} # private key qe gjenerohet gjat krijimit te serverit
-          port: 22
-          script: | 
-            docker pull rinorh/cicd:latest
-            docker stop cicd || true
-            docker rm cicd || true
-            docker run -d -p 8080 cicd:latest
