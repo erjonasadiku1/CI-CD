@@ -24,3 +24,22 @@ jobs: # workflow can have one or more job
           context: .
           push: true
           tags: erjonasadiku/cicd:latest
+          
+      - name: Notify Discord
+        if: always()
+        run: |
+          STATUS="${{ job.status }}"
+          COLOR="3066993" # green
+          if [ "$STATUS" != "success" ]; then
+            COLOR="15158332" # red
+          fi
+
+          curl -H "Content-Type: application/json" \
+          -d "{
+            \"embeds\": [{
+              \"title\": \"GitHub Actions Pipeline\",
+              \"description\": \"Status: $STATUS\",
+              \"color\": $COLOR
+            }]
+          }" \
+          ${{ secrets.DISCORD_WEBHOOK }}
