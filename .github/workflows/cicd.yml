@@ -18,3 +18,9 @@ jobs: # workflow can have one or more job
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Build and push dockerimage
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: erjonasadiku/cicd:latest
